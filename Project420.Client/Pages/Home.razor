@@ -1,0 +1,109 @@
+﻿@page "/"
+@layout HomeLayout
+
+<PageTitle>首页 | 病去如风 - 一站式医患服务平台</PageTitle>
+
+<MContainer>
+    <div class="text-h4 mb-4">动态板块</div>
+    <MRow>
+        <MCol Cols="12" Sm="6" Md="3">
+            <a style="text-decoration:none">
+                <MCard Class="rounded-xl">
+                    <MImage Src="image/card/p1.jpg" Height="240">
+                        <div class="d-flex flex-column align-center justify-center" style="background-color: #0008; height:100%">
+                            <MIcon Size="96" Color="white">mdi-magnify</MIcon>
+                            <MCardTitle Class="white--text">名医探寻</MCardTitle>
+                        </div>
+                    </MImage>
+                </MCard>
+            </a>
+        </MCol>
+        <MCol Cols="12" Sm="6" Md="3">
+            <a style="text-decoration:none">
+                <MCard Class="rounded-xl">
+                    <MImage Src="image/card/p2.jpg" Height="240">
+                        <div class="d-flex flex-column align-center justify-center" style="background-color: #0008; height:100%">
+                            <MIcon Size="96" Color="white">mdi-comment-question</MIcon>
+                            <MCardTitle Class="white--text">互助问答</MCardTitle>
+                        </div>
+                    </MImage>
+                </MCard>
+            </a>
+        </MCol>
+        <MCol Cols="12" Sm="6" Md="3">
+            <a style="text-decoration:none">
+                <MCard Class="rounded-xl">
+                    <MImage Src="image/card/p3.jpg" Height="240">
+                        <div class="d-flex flex-column align-center justify-center" style="background-color: #0008; height:100%">
+                            <MIcon Size="96" Color="white">mdi-newspaper</MIcon>
+                            <MCardTitle Class="white--text">资讯速览</MCardTitle>
+                        </div>
+                    </MImage>
+                </MCard>
+            </a>
+        </MCol>
+        <MCol Cols="12" Sm="6" Md="3">
+            <a style="text-decoration:none">
+                <MCard Class="rounded-xl">
+                    <MImage Src="image/card/p4.jpg" Height="240">
+                        <div class="d-flex flex-column align-center justify-center" style="background-color: #0008; height:100%">
+                            <MIcon Size="96" Color="white">mdi-atom</MIcon>
+                            <MCardTitle Class="white--text">科普空间</MCardTitle>
+                        </div>
+                    </MImage>
+                </MCard>
+            </a>
+        </MCol>
+    </MRow>
+</MContainer>
+<MContainer>
+    <div class="text-h4 mb-4">最新资讯</div>
+    <MRow>
+        @for (int i = 0; i < 6; i++)
+        {
+            <MCol Cols="12" Sm="6" Md="4">
+                <MCard Class="mx-auto card-misc-reveal" Outlined>
+                    <MCardText>
+                        <div>新闻 · 中国科学报</div>
+                        <p class="text-h4 text--primary">谁是布洛芬的第一个服用者？</p>
+                        <div class="text--primary">
+                            2022年12月，新冠病毒感染人数激增，消炎止痛药布洛芬顿时成为抢手货。如果布洛芬的发明人斯图尔特·亚当斯还活着，他今年正好是100岁。4年前的2019年1月30日，亚当斯在英国皇后医学中心去世。布洛芬问世60年来，一直是全世界人民最常用的、物美价廉的退烧镇痛消炎药……
+                        </div>
+                    </MCardText>
+                    <MCardActions>
+                        <a href="post" style="text-decoration:none">
+                            <MButton Text Color="primary">了解更多</MButton>
+                        </a>
+                    </MCardActions>
+                </MCard>
+            </MCol>
+        }
+    </MRow>
+</MContainer>
+<MContainer>
+    <div class="text-h4 mb-4">互助问答</div>
+    <MRow>
+        @for (int i = 0; i < 4; i++)
+        {
+            <MCol Cols="12" Md="6">
+                <MCard Outlined>
+                    <MListItem ThreeLine>
+                        <MListItemContent>
+                            <div class="text-overline mb-4">提问</div>
+                            <MListItemTitle Class="text-h5 mb-1">
+                                症状答疑
+                            </MListItemTitle>
+                            <MListItemSubtitle>症状及患病时长：我父亲82岁，两周前感染新冠，只咳嗽，近一周出现低烧，37.4左右.元月一号做ct,显示肺部感染，开始服用阿兹夫定片，喝治新冠的中药。今天发高烧，最高38.4.ct显示肺部感染面积增大，抽血显示没有细菌感染……</MListItemSubtitle>
+                        </MListItemContent>
+                        <MListItemAvatar Size=80 Color="accent">
+                            <span class="white--text">王女士</span>
+                        </MListItemAvatar>
+                    </MListItem>
+                    <MCardActions>
+                        <MButton Outlined Rounded Text>查看问题</MButton>
+                    </MCardActions>
+                </MCard>
+            </MCol>
+        }
+    </MRow>
+</MContainer>

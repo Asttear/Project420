@@ -1,0 +1,13 @@
+﻿<a class="d-flex justify-center text-caption text-decoration-none" href="/"
+   @attributes="@Attributes">
+    <MChip>
+        <h3>病去如风</h3>
+    </MChip>
+</a>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> Attributes { get; set; } = new();
+
+    //private string _src = "/image/logo.png";
+}

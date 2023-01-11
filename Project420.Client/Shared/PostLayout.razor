@@ -1,0 +1,15 @@
+﻿@inherits LayoutComponentBase
+
+<MApp>
+    <Header />
+
+    <MMain>
+        <MContainer Fluid>
+            <CascadingValue Value="this">
+                @Body
+            </CascadingValue>
+        </MContainer>
+    </MMain>
+
+    <Footer />
+</MApp>
