@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "MaterialDesign-Webfont@7.2.96",
+      "destination": "wwwroot/lib/MaterialDesign-Webfont"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "quill@1.3.7",
+      "destination": "wwwroot/lib/quill/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "quilljs-markdown@1.2.0",
+      "destination": "wwwroot/lib/quilljs-markdown/",
+      "files": [
+        "dist/quilljs-markdown-common-style.css",
+        "dist/quilljs-markdown-common-style.css.map",
+        "dist/quilljs-markdown-common-style.min.css",
+        "dist/quilljs-markdown.js",
+        "dist/quilljs-markdown.js.map",
+        "dist/quilljs-markdown.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "quill-emoji@0.2.0",
+      "destination": "wwwroot/lib/quill-emoji/",
+      "files": [
+        "dist/quill-emoji.css",
+        "dist/quill-emoji.js",
+        "dist/quill-emoji.min.css",
+        "dist/quill-emoji.min.js"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+@using BlazorComponent.I18n
+
+@inherits LayoutComponentBase
+@inject I18n I18n
+
+<PageTitle>@Config.PageTitle | 病去如风</PageTitle>
+
+<MApp>
+    @if (Config.AppBar)
+    {
+        <AppBar PageTitle="@Config.PageTitle" ShowBackButton="Config.BackButton" />
+    }
+    <MMain Style="background:#F5F5F5">
+        <CascadingValue Value="this" IsFixed>
+            <MErrorHandler>
+                <MContainer Fluid="true">
+                    @Body
+                </MContainer>
+            </MErrorHandler>
+        </CascadingValue>
+    </MMain>
+
+    <BottomNavigation />
+</MApp>
+
+
+
+@code {
+    PageConfig _config = new("加载中");
+
+    internal PageConfig Config
+    {
+        get => _config;
+        set
+        {
+            _config = value;
+            StateHasChanged();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        I18n.SetCulture(new System.Globalization.CultureInfo("zh-CN"));
+    }
+}

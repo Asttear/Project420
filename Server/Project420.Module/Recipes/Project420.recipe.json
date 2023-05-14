@@ -1,0 +1,680 @@
+{
+    "name": "Project420",
+    "displayName": "Project 420",
+    "description": "The recipe for Project 420.",
+    "author": "Project420",
+    "website": "",
+    "version": "1.0",
+    "issetuprecipe": true,
+    "categories": [ "default" ],
+    "tags": [ "tag" ],
+    "steps": [
+        {
+            "name": "Feature",
+            "enable": [
+                "OrchardCore.HomeRoute",
+                "OrchardCore.Themes",
+                "OrchardCore.Localization",
+                "OrchardCore.Navigation",
+                "OrchardCore.Diagnostics",
+                "OrchardCore.Roles",
+                "OrchardCore.Users",
+                "OrchardCore.Users.Registration",
+                "OrchardCore.Users.ResetPassword",
+                "OrchardCore.Users.CustomUserSettings",
+
+                "OrchardCore.AdminMenu",
+                "OrchardCore.ContentFields",
+                "OrchardCore.Title",
+                "OrchardCore.Lists",
+                "OrchardCore.Media",
+                "OrchardCore.OpenId",
+                "OrchardCore.OpenId.Management",
+                "OrchardCore.OpenId.Server",
+                "OrchardCore.OpenId.Validation",
+
+                "TheAdmin"
+            ]
+        },
+        {
+            "name": "Settings",
+            "HomeRoute": {
+                "Action": "Index",
+                "Controller": "Admin",
+                "Area": "OrchardCore.Admin"
+            },
+            "AdminSettings": {
+                "DisplayDarkMode": true,
+                "DisplayMenuFilter": false,
+                "DisplayNewMenu": false,
+                "DisplayTitlesInTopbar": true
+            },
+            "RegistrationSettings": {
+                "UsersCanRegister": 1,
+                "UsersMustValidateEmail": false
+            },
+            "ResetPasswordSettings": {
+                "AllowResetPassword": true
+            }
+        },
+        {
+            "name": "Themes",
+            "Admin": "TheAdmin"
+        },
+        {
+            "name": "AdminMenu",
+            "data": [
+                {
+                    "Name": "Content",
+                    "Enabled": true,
+                    "MenuItems": [
+                        {
+                            "$type": "OrchardCore.AdminMenu.AdminNodes.PlaceholderAdminNode, OrchardCore.AdminMenu",
+                            "LinkText": "管理",
+                            "IconClass": "far fa-folder-open",
+                            "Items": [
+                                {
+                                    "$type": "OrchardCore.Contents.AdminNodes.ContentTypesAdminNode, OrchardCore.Contents",
+                                    "ShowAll": false,
+                                    "IconClass": null,
+                                    "ContentTypes": [
+                                        {
+                                            "ContentTypeId": "Comment",
+                                            "IconClass": "fas fa-comment-dots"
+                                        },
+                                        {
+                                            "ContentTypeId": "Discussion",
+                                            "IconClass": "fas fa-comments"
+                                        },
+                                        {
+                                            "ContentTypeId": "Article",
+                                            "IconClass": "fas fa-newspaper"
+                                        },
+                                        {
+                                            "ContentTypeId": "Link",
+                                            "IconClass": "fas fa-link"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "Name": "Case",
+                    "Enabled": true,
+                    "MenuItems": [
+                        {
+                            "$type": "OrchardCore.AdminMenu.AdminNodes.LinkAdminNode, OrchardCore.AdminMenu",
+                            "LinkText": "案例",
+                            "LinkUrl": "https://legion:7000/Bedrock/Admin/Contents/ContentItems/Case?q=status:Owner",
+                            "IconClass": "fas fa-folder-plus"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Roles",
+            "Roles": [
+                {
+                    "Name": "Administrator",
+                    "Description": "管理员",
+                    "Permissions": []
+                },
+                {
+                    "Name": "Moderator",
+                    "Description": "审核",
+                    "Permissions": []
+                },
+                {
+                    "Name": "Editor",
+                    "Description": "编辑",
+                    "Permissions": []
+                },
+                {
+                    "Name": "Author",
+                    "Description": "作者",
+                    "Permissions": []
+                },
+                {
+                    "Name": "Contributor",
+                    "Description": "贡献者",
+                    "Permissions": []
+                },
+                {
+                    "Name": "Doctor",
+                    "Description": "医生",
+                    "Permissions": [
+                        "DeleteOwn_Case",
+                        "ListContent_Case",
+                        "PublishOwn_Case",
+                        "AccessAdminPanel",
+                        "ViewAdminMenu_Case"
+                    ]
+                },
+                {
+                    "Name": "Authenticated",
+                    "Description": "已登录",
+                    "Permissions": [
+                        "DeleteOwn_Comment",
+                        "PublishOwn_Comment",
+                        "DeleteOwn_Discussion",
+                        "PublishOwn_Discussion",
+                        "ManageOwnUserInformation",
+                        "ManageOwnCustomUserSettings_UserProfile"
+                    ]
+                },
+                {
+                    "Name": "Anonymous",
+                    "Description": "匿名",
+                    "Permissions": []
+                }
+            ]
+        },
+        {
+            "name": "ContentDefinition",
+            "ContentTypes": [
+                {
+                    "Name": "Comment",
+                    "DisplayName": "评论",
+                    "Settings": {
+                        "ContentTypeSettings": {
+                            "Creatable": true,
+                            "Listable": true,
+                            "Securable": true
+                        }
+                    },
+                    "ContentTypePartDefinitionRecords": [
+                        {
+                            "PartName": "Comment",
+                            "Name": "Comment",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "1"
+                                }
+                            }
+                        },
+                        {
+                            "PartName": "TitlePart",
+                            "Name": "TitlePart",
+                            "Settings": {
+                                "TitlePartSettings": {
+                                    "Options": 2,
+                                    "Pattern": "{{ ContentItem.Content.Comment.Content.Html }}"
+                                },
+                                "ContentTypePartSettings": {
+                                    "Position": "0"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Article",
+                    "DisplayName": "文章",
+                    "Settings": {
+                        "ContentTypeSettings": {
+                            "Creatable": true,
+                            "Listable": true,
+                            "Draftable": true,
+                            "Versionable": true,
+                            "Securable": true
+                        }
+                    },
+                    "ContentTypePartDefinitionRecords": [
+                        {
+                            "PartName": "Article",
+                            "Name": "Article",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "1"
+                                }
+                            }
+                        },
+                        {
+                            "PartName": "TitlePart",
+                            "Name": "TitlePart",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "0"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Case",
+                    "DisplayName": "案例",
+                    "Settings": {
+                        "ContentTypeSettings": {
+                            "Creatable": true,
+                            "Listable": true,
+                            "Draftable": true,
+                            "Versionable": true,
+                            "Securable": true
+                        }
+                    },
+                    "ContentTypePartDefinitionRecords": [
+                        {
+                            "PartName": "Case",
+                            "Name": "Case",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "1"
+                                }
+                            }
+                        },
+                        {
+                            "PartName": "TitlePart",
+                            "Name": "TitlePart",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "0"
+                                },
+                                "TitlePartSettings": {
+                                    "Options": 2,
+                                    "Pattern": "案例 {{ ContentItem.Content.Case.Date.Value }}"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Discussion",
+                    "DisplayName": "讨论",
+                    "Settings": {
+                        "ContentTypeSettings": {
+                            "Creatable": true,
+                            "Listable": true,
+                            "Draftable": true,
+                            "Versionable": true,
+                            "Securable": true
+                        }
+                    },
+                    "ContentTypePartDefinitionRecords": [
+                        {
+                            "PartName": "Discussion",
+                            "Name": "Discussion",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "1"
+                                }
+                            }
+                        },
+                        {
+                            "PartName": "TitlePart",
+                            "Name": "TitlePart",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "0"
+                                },
+                                "TitlePartSettings": {
+                                    "Options": 3
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Link",
+                    "DisplayName": "友情链接",
+                    "Settings": {
+                        "ContentTypeSettings": {
+                            "Creatable": true,
+                            "Listable": true,
+                            "Securable": true
+                        }
+                    },
+                    "ContentTypePartDefinitionRecords": [
+                        {
+                            "PartName": "Link",
+                            "Name": "Link",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "1"
+                                }
+                            }
+                        },
+                        {
+                            "PartName": "TitlePart",
+                            "Name": "TitlePart",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "0"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "UserProfile",
+                    "DisplayName": "用户档案",
+                    "Settings": {
+                        "ContentTypeSettings": {
+                            "Stereotype": "CustomUserSettings"
+                        }
+                    },
+                    "ContentTypePartDefinitionRecords": [
+                        {
+                            "PartName": "UserProfile",
+                            "Name": "UserProfile",
+                            "Settings": {
+                                "ContentTypePartSettings": {
+                                    "Position": "0"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "ContentParts": [
+                {
+                    "Name": "ListPart",
+                    "Settings": {
+                        "ContentPartSettings": {
+                            "Attachable": true,
+                            "DisplayName": "列表",
+                            "Description": "添加列表行为。"
+                        }
+                    }
+                },
+                {
+                    "Name": "LiquidPart",
+                    "Settings": {
+                        "ContentPartSettings": {
+                            "Attachable": true,
+                            "DisplayName": "Liquid 零件",
+                            "Description": "为你的内容项目提供一个 Liquid 格式化的主体。"
+                        }
+                    }
+                },
+                {
+                    "Name": "CommonPart",
+                    "Settings": {
+                        "ContentPartSettings": {
+                            "Attachable": true,
+                            "DisplayName": "公共零件",
+                            "Description": "为内容项目的公共属性提供一个编辑器。"
+                        }
+                    }
+                },
+                {
+                    "Name": "TitlePart",
+                    "Settings": {
+                        "ContentPartSettings": {
+                            "Attachable": true,
+                            "DisplayName": "标题零件",
+                            "Description": "为你的内容项目提供一个标题。",
+                            "DefaultPosition": "0"
+                        }
+                    }
+                },
+                {
+                    "Name": "Comment",
+                    "ContentPartFieldDefinitionRecords": [
+                        {
+                            "FieldName": "TextField",
+                            "Name": "RelatedItem",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "关联",
+                                    "Position": "0"
+                                },
+                                "TextFieldSettings": {
+                                    "Hint": "该评论所关联的内容项目ID。",
+                                    "Required": true
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "HtmlField",
+                            "Name": "Content",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "内容",
+                                    "Editor": "Trumbowyg",
+                                    "Position": "1"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Article",
+                    "ContentPartFieldDefinitionRecords": [
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Source",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "来源",
+                                    "Position": "0"
+                                },
+                                "TextFieldSettings": {
+                                    "Required": true
+                                }
+
+                            }
+                        },
+                        {
+                            "FieldName": "HtmlField",
+                            "Name": "Content",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "内容",
+                                    "Editor": "Trumbowyg",
+                                    "Position": "1"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Case",
+                    "Settings": {},
+                    "ContentPartFieldDefinitionRecords": [
+                        {
+                            "FieldName": "DateField",
+                            "Name": "Date",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "日期",
+                                    "Position": "0"
+                                },
+                                "DateFieldSettings": {
+                                    "Required": true
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Gender",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "性别",
+                                    "Editor": "PredefinedList",
+                                    "Position": "1"
+                                },
+                                "TextFieldSettings": {
+                                    "Required": true
+                                },
+                                "TextFieldPredefinedListEditorSettings": {
+                                    "Options": [
+                                        {
+                                            "name": "保密",
+                                            "value": "Confidential"
+                                        },
+                                        {
+                                            "name": "男",
+                                            "value": "Male"
+                                        },
+                                        {
+                                            "name": "女",
+                                            "value": "Female"
+                                        }
+                                    ],
+                                    "DefaultValue": "Confidential"
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "NumericField",
+                            "Name": "Age",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "年龄",
+                                    "Editor": "Spinner",
+                                    "Position": "2"
+                                },
+                                "NumericFieldSettings": {
+                                    "Required": true,
+                                    "Minimum": 0,
+                                    "Maximum": 120,
+                                    "Placeholder": "年龄"
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Symptoms",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "症状",
+                                    "Editor": "TextArea",
+                                    "Position": "3"
+                                },
+                                "TextFieldSettings": {
+                                    "Required": true
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Treatment",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "诊治",
+                                    "Editor": "TextArea",
+                                    "Position": "4"
+                                },
+                                "TextFieldSettings": {
+                                    "Required": true
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Discussion",
+                    "ContentPartFieldDefinitionRecords": [
+                        {
+                            "FieldName": "HtmlField",
+                            "Name": "Content",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "内容",
+                                    "Editor": "Trumbowyg",
+                                    "Position": "0"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "Link",
+                    "ContentPartFieldDefinitionRecords": [
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Url",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "地址",
+                                    "Editor": "Url",
+                                    "Position": "0"
+                                },
+                                "TextFieldSettings": {
+                                    "Required": true
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Subtitle",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "副标题",
+                                    "Position": "1"
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "TextField",
+                            "Name": "IconUrl",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "图标地址",
+                                    "Editor": "Url",
+                                    "Position": "2"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "Name": "UserProfile",
+                    "ContentPartFieldDefinitionRecords": [
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Nickname",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "昵称"
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "TextField",
+                            "Name": "Gender",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "性别",
+                                    "Editor": "PredefinedList"
+                                },
+                                "TextFieldSettings": {
+                                    "Required": true
+                                },
+                                "TextFieldPredefinedListEditorSettings": {
+                                    "Options": [
+                                        {
+                                            "name": "保密",
+                                            "value": "Confidential"
+                                        },
+                                        {
+                                            "name": "男",
+                                            "value": "Male"
+                                        },
+                                        {
+                                            "name": "女",
+                                            "value": "Female"
+                                        }
+                                    ],
+                                    "DefaultValue": "Confidential"
+                                }
+                            }
+                        },
+                        {
+                            "FieldName": "DateField",
+                            "Name": "Birthday",
+                            "Settings": {
+                                "ContentPartFieldSettings": {
+                                    "DisplayName": "出生日期"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

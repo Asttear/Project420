@@ -1,0 +1,145 @@
+﻿@page "/Features/Profile"
+@inject IApiService ApiService
+@inject NavigationManager Navigation
+
+<MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
+    <div class="d-flex flex-column pa-4" style="max-width:100%">
+        <AuthorizeView>
+            <Authorized>
+                @if (_profile is null)
+                {
+                    <CenterProgressCircular />
+                }
+                else
+                {
+                    <MCard Width="600" MaxWidth="@("100%")">
+                        <MToolbar Flat="true">
+                            <MToolbarTitle class="font-weight-light">@_profile.Nickname 的资料</MToolbarTitle>
+                            <MSpacer></MSpacer>
+                            <MButton Color="primary" Fab="true" Small="true" OnClick="() => _isEditing = !_isEditing">
+                                @if (_isEditing)
+                                {
+                                    <MIcon>mdi-close</MIcon>
+                                }
+                                else
+                                {
+                                    <MIcon>mdi-pencil</MIcon>
+                                }
+                            </MButton>
+                        </MToolbar>
+                        <MCardText>
+                            <MTextField @bind-Value="_userName"
+                                    PrependIcon="mdi-account"
+                                    Disabled="true"
+                                    TValue="string"
+                                    Label="用户名">
+                            </MTextField>
+                            <MTextField @bind-Value="_profile.Nickname"
+                                    PrependIcon="mdi-form-textbox"
+                                    Disabled="!_isEditing"
+                                    TValue="string"
+                                    Label="昵称">
+                            </MTextField>
+                            <MRadioGroup @bind-Value="_profile.Gender"
+                                     PrependIcon="mdi-gender-male-female"
+                                     Mandatory="true"
+                                     Row="true"
+                                     Disabled="!_isEditing">
+                                <MRadio Label="保密" TValue="Gender?" Value="Gender.Confidential"></MRadio>
+                                <MRadio Label="男" TValue="Gender?" Value="Gender.Male"></MRadio>
+                                <MRadio Label="女" TValue="Gender?" Value="Gender.Female"></MRadio>
+                            </MRadioGroup>
+                            <MMenu @bind-Value="_picker"
+                               Context="menu"
+                               CloseOnContentClick="false"
+                               Transition="scale-transition"
+                               OffsetY="true"
+                               MinWidth="@("auto")">
+                                <ActivatorContent>
+                                    <MTextField @bind-Value="_profile.Birthday"
+                                            @attributes="menu.Attrs"
+                                            PrependIcon="mdi-calendar"
+                                            Disabled="!_isEditing"
+                                            Readonly="true"
+                                            Label="出生日期">
+                                    </MTextField>
+                                </ActivatorContent>
+                                <ChildContent>
+                                    <MDatePicker @bind-Value="_profile.Birthday"
+                                             Max="DateOnly.FromDateTime(DateTime.Now)"
+                                             Min="new DateOnly(1950, 1, 1)"
+                                             OnInput="() => _picker = false">
+                                    </MDatePicker>
+                                </ChildContent>
+                            </MMenu>
+                        </MCardText>
+                        <MDivider></MDivider>
+                        <MCardActions>
+                            <MButton Text="true" Color="primary" Href="https://legion:7000/Bedrock/ChangePassword" Target="_blank">修改密码</MButton>
+                            <MSpacer></MSpacer>
+                            <MButton Disabled="!_isEditing" Color="success" OnClick="Save">保存</MButton>
+                        </MCardActions>
+                    </MCard>
+                }
+            </Authorized>
+            <NotAuthorized>
+                <MAlert Width="800"
+                        MaxWidth="@("100%")"
+                        Border="Borders.Top"
+                        ColoredBorder="true"
+                        Type="AlertTypes.Warning"
+                        Elevation="2">
+                    您必须登录才能访问个人信息！<br />
+                    即将跳转……
+                </MAlert>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</MRow>
+<MSnackbar @bind-Value="_hasSaved" Timeout="2000" Absolute Bottom>
+    信息已保存！
+</MSnackbar>
+
+@code {
+    [CascadingParameter]
+    MainLayout Layout { get; set; } = null!;
+
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    string _userName = "";
+    bool _isEditing = false;
+    bool _hasSaved = false;
+    bool _picker = false;
+
+    ProfileModel? _profile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.Config = new("个人资料", true, true);
+
+        var user = (await AuthenticationState).User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            _userName = user.Identity.Name ?? "用户名";
+            _profile = await ApiService.GetProfileAsync();
+        }
+        else
+        {
+            await Task.Delay(2000);
+            Navigation.NavigateTo("Features");
+        }
+    }
+
+    private async Task Save()
+    {
+        if (_profile is null)
+        {
+            throw new InvalidOperationException();
+        }
+        _isEditing = false;
+        await ApiService.ModifyProfileAsync(_profile);
+        _hasSaved = true;
+    }
+}
+

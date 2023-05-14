@@ -1,0 +1,104 @@
+﻿@page "/Features"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+@inject NavigationManager Navigation
+@inject IApiService ApiService
+
+<MRow Class="overflow-y-auto" Style="height:calc(100vh - 56px)" Justify="JustifyTypes.Center">
+    <div class="d-flex flex-column" style="width:600px">
+        <MCard Height="200" OnClick="CardAction">
+            <MImage Class="align-center px-8"
+                    Style="width:100%;height:100%"
+                    Src="_content/Project420.Client/image/bg-banner.jpg"
+                    Gradient="to right top, rgba(100, 115, 201, 0.33), rgba(25, 32, 72, 0.7)">
+                <div class="d-flex align-center">
+                    <MAvatar Size="56">
+                        <MIcon Dark="true" Size="56">mdi-account-circle</MIcon>
+                    </MAvatar>
+                    <div class="white--text">
+                        <MCardTitle>
+                            @_userName
+                        </MCardTitle>
+                        <MCardSubtitle>
+                            @_authMessage
+                        </MCardSubtitle>
+                    </div>
+                </div>
+            </MImage>
+        </MCard>
+        <MList Class="flex-grow-1">
+            <MSubheader>功能入口</MSubheader>
+            <MListItemGroup Color="primary">
+                <MListItem Href="Features/Profile">
+                    <MListItemIcon>
+                        <MIcon>mdi-information</MIcon>
+                    </MListItemIcon>
+                    <MListItemContent>
+                        <MListItemTitle>个人资料</MListItemTitle>
+                    </MListItemContent>
+                </MListItem>
+                <MListItem Href="Features/Links">
+                    <MListItemIcon>
+                        <MIcon>mdi-view-list</MIcon>
+                    </MListItemIcon>
+                    <MListItemContent>
+                        <MListItemTitle>友情链接</MListItemTitle>
+                    </MListItemContent>
+                </MListItem>
+                <MListItem Href="Features/Contacts">
+                    <MListItemIcon>
+                        <MIcon>mdi-contacts</MIcon>
+                    </MListItemIcon>
+                    <MListItemContent>
+                        <MListItemTitle>联系方式</MListItemTitle>
+                    </MListItemContent>
+                </MListItem>
+            </MListItemGroup>
+        </MList>
+    </div>
+</MRow>
+
+@code {
+    [CascadingParameter]
+    MainLayout Layout { get; set; } = null!;
+
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    bool _authenticated = false;
+    string _userName = "加载中";
+    string _authMessage = "请稍候……";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.Config = new("功能入口", false);
+
+        var user = (await AuthenticationState).User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var profile = await ApiService.GetProfileAsync();
+            _userName = profile.Nickname ?? user.Identity.Name ?? "用户";
+            _authMessage = "欢迎使用病去如风";
+            _authenticated = true;
+        }
+        else
+        {
+            _userName = "未登录";
+            _authMessage = "登录以体验更多功能";
+            _authenticated = false;
+        }
+    }
+
+    void CardAction(MouseEventArgs args)
+    {
+        if (!_authenticated)
+        {
+            Navigation.NavigateTo("Features/Authentication/Login");
+        }
+        else
+        {
+            Navigation.NavigateToLogout("Features/Authentication/Logout");
+        }
+
+    }
+}

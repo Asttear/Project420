@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.5" />
+    <PackageReference Include="OrchardCore.Application.Cms.Core.Targets" Version="1.6.0" />
+    <PackageReference Include="OrchardCore.Translations.zh-CN" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Project420.Module\Project420.Module.csproj" />
+    <ProjectReference Include="..\Project420.Theme\Project420.Theme.csproj" />
+    <ProjectReference Include="..\..\Client\Project420.Wasm\Project420.Wasm.csproj" />
+  </ItemGroup>
+
+</Project>

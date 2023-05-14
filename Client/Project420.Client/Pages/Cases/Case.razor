@@ -1,0 +1,175 @@
+﻿@page "/Cases/{Id}"
+@inject IApiService ApiService
+
+@if (_case is null)
+{
+    <CenterProgressCircular />
+}
+else
+{
+    string? date = _case.Date?.ToString("yyyy年MM月dd日");
+    string? gender = _case.Gender switch
+    {
+        Gender.Male => "男性",
+        Gender.Female => "女性",
+        _ => "保密"
+    };
+    <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
+        <div class="d-flex flex-column pa-4" style="width:1200px; max-width:100%; row-gap:16px">
+            <MCard Class="pa-4">
+                <article>
+                    <header>
+                        <MCardTitle>
+                            <h1 class="text-h4">案例：@date</h1>
+                        </MCardTitle>
+                        <MCardSubtitle>
+                            <MChipGroup>
+                                <MChip>
+                                    <MIcon Left="true">mdi-account</MIcon>
+                                    @_case.Author
+                                </MChip>
+                                <MChip>
+                                    <MIcon Left="true">mdi-clock</MIcon>
+                                    @_case.CreatedTime?.LocalDateTime
+                                </MChip>
+                            </MChipGroup>
+                        </MCardSubtitle>
+                    </header>
+                    <MCardSubtitle Class="pt-0">
+                        <MButton Text="true" Color="primary" OnClick="TogglePanel">收放面板</MButton>
+                    </MCardSubtitle>
+                    <MCardText Class="text-body-1">
+                        <MExpansionPanels @bind-Values="_panel" Multiple="true">
+                            <MExpansionPanel>
+                                <MExpansionPanelHeader>
+                                    <MRow NoGutters="true">
+                                        <MCol Cols="4">
+                                            <MIcon Left="true">mdi-calendar</MIcon>
+                                            日期
+                                        </MCol>
+                                        <MCol Cols="8" Class="text--secondary" Style="line-height: initial">
+                                            <FadeTransition LeaveAbsolute="true">
+                                                <IfTransitionElement Tag="span" Value="!context">
+                                                    @date
+                                                </IfTransitionElement>
+                                            </FadeTransition>
+                                        </MCol>
+                                    </MRow>
+                                </MExpansionPanelHeader>
+                                <MExpansionPanelContent>
+                                    @date
+                                </MExpansionPanelContent>
+                            </MExpansionPanel>
+                            <MExpansionPanel>
+                                <MExpansionPanelHeader>
+                                    <MRow NoGutters="true">
+                                        <MCol Cols="4">
+                                            <MIcon Left="true">mdi-gender-male-female</MIcon>
+                                            性别
+                                        </MCol>
+                                        <MCol Cols="8" Class="text--secondary" Style="line-height: initial">
+                                            <FadeTransition LeaveAbsolute="true">
+                                                <IfTransitionElement Tag="span" Value="!context">
+                                                    @gender
+                                                </IfTransitionElement>
+                                            </FadeTransition>
+                                        </MCol>
+                                    </MRow>
+                                </MExpansionPanelHeader>
+                                <MExpansionPanelContent>
+                                    @gender
+                                </MExpansionPanelContent>
+                            </MExpansionPanel>
+                            <MExpansionPanel>
+                                <MExpansionPanelHeader>
+                                    <MRow NoGutters="true">
+                                        <MCol Cols="4">
+                                            <MIcon Left="true">mdi-cake-variant</MIcon>
+                                            年龄
+                                        </MCol>
+                                        <MCol Cols="8" Class="text--secondary" Style="line-height: initial">
+                                            <FadeTransition LeaveAbsolute="true">
+                                                <IfTransitionElement Tag="span" Value="!context">
+                                                    @(_case.Age)岁
+                                                </IfTransitionElement>
+                                            </FadeTransition>
+                                        </MCol>
+                                    </MRow>
+                                </MExpansionPanelHeader>
+                                <MExpansionPanelContent>
+                                    @(_case.Age)岁
+                                </MExpansionPanelContent>
+                            </MExpansionPanel>
+                            <MExpansionPanel>
+                                <MExpansionPanelHeader>
+                                    <MRow NoGutters="true">
+                                        <MCol Cols="4">
+                                            <MIcon Left="true">mdi-account-voice</MIcon>
+                                            症状
+                                        </MCol>
+                                    </MRow>
+                                </MExpansionPanelHeader>
+                                <MExpansionPanelContent Class="line-break">
+                                    @_case.Symptoms
+                                </MExpansionPanelContent>
+                            </MExpansionPanel>
+                            <MExpansionPanel>
+                                <MExpansionPanelHeader>
+                                    <MRow NoGutters="true">
+                                        <MCol Cols="4">
+                                            <MIcon Left="true">mdi-pill</MIcon>
+                                            诊治
+                                        </MCol>
+                                    </MRow>
+                                </MExpansionPanelHeader>
+                                <MExpansionPanelContent Class="line-break">
+                                    @_case.Treatment
+                                </MExpansionPanelContent>
+                            </MExpansionPanel>
+                        </MExpansionPanels>
+                    </MCardText>
+                </article>
+            </MCard>
+        </div>
+    </MRow>
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = null!;
+
+    [CascadingParameter]
+    MainLayout Layout { get; set; } = null!;
+
+    CaseModel? _case;
+    List<StringNumber> _panel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.Config = new("加载中", true, true);
+        _case = await ApiService.GetCaseAsync(Id);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (_case is not null)
+        {
+            string title = _case.Date is DateTimeOffset date
+                ? $"案例：{date.ToString("D")}"
+                : "案例";
+            Layout.Config = Layout.Config with { PageTitle = title };
+        }
+    }
+
+    void TogglePanel()
+    {
+        if (_panel.Count > 0)
+        {
+            _panel.Clear();
+        }
+        else
+        {
+            _panel.AddRange(Enumerable.Range(0, 5).Select(i => (StringNumber)i));
+        }
+    }
+}

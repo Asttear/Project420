@@ -1,0 +1,59 @@
+@page "/Discussions"
+@inherits InfinitePage
+@inject IApiService ApiService
+
+<MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
+    <div class="d-flex flex-column pa-4" style="width:800px; max-width:100%; row-gap:16px">
+        @foreach (var discussion in _discussions)
+        {
+            <MHover>
+                <MCard @attributes="context.Attrs"
+                   Class="transition-swing"
+                   Href="@($"/Discussions/{discussion.Id}")"
+                   Elevation="@(context.Hover ? 10 : 2)">
+                    <MListItem ThreeLine="true">
+                        <MListItemAvatar Size="64" Class="align-self-center">
+                            <MIcon Size="64">mdi-account-circle</MIcon>
+                        </MListItemAvatar>
+                        <MListItemContent>
+                            <div class="text-overline">
+                                @discussion.Author
+                            </div>
+                            <MListItemTitle Class="text-h5 mb-4">
+                                @discussion.Title
+                            </MListItemTitle>
+                            <MListItemSubtitle>@discussion.CreatedTime?.LocalDateTime</MListItemSubtitle>
+                        </MListItemContent>
+                    </MListItem>
+                </MCard>
+            </MHover>
+        }
+        <MInfiniteScroll Threshold="5"
+                         HasMore="_hasMore"
+                         OnLoadMore="async () => await LoadMore(_discussions, LoadDiscussions)"
+                         Parent="_container?.Ref">
+        </MInfiniteScroll>
+    </div>
+</MRow>
+<FabTransition>
+    <MButton Href="/Discussions/New" Large="true" Fab="true" Color="primary" Class="transition-swing"
+             Style="position:fixed; bottom:72px; right:4vw;">
+        <MIcon>mdi-pen</MIcon>
+    </MButton>
+</FabTransition>
+
+@code {
+    [CascadingParameter]
+    MainLayout Layout { get; set; } = null!;
+
+    MRow? _container;
+    List<DiscussionMetadata> _discussions = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.Config = new("疾病问答");
+        await LoadMore(_discussions, LoadDiscussions);
+    }
+
+    Task<IList<DiscussionMetadata>?> LoadDiscussions() => ApiService.ListDiscussionsAsync(_discussions.Count);
+}

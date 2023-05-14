@@ -1,0 +1,5 @@
+{
+  "The Username field is required.": "请填写用户名。",
+  "The Password field is required.": "请填写密码。",
+  "Name must be at most 10 characters long.": "名称长度不得超过10个字符。"
+}

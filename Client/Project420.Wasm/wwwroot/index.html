@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>病去如风</title>
+    <base href="/" />
+    <link rel="icon" type="image/png" href="_content/Project420.Client/favicon.png" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+    <link href="_content/Project420.Client/css/app.css" rel="stylesheet" />
+    <link href="_content/Project420.Client/lib/MaterialDesign-Webfont/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="_content/Project420.Client/lib/quill/quill.snow.min.css" rel="stylesheet">
+    <link href="_content/Project420.Client/lib/quill/quill.bubble.min.css" rel="stylesheet">
+    <link href="_content/Project420.Client/lib/quill-emoji/dist/quill-emoji.min.css" rel="stylesheet">
+    <link href="_content/Project420.Client/lib/quilljs-markdown/dist/quilljs-markdown-common-style.min.css" rel="stylesheet">
+    <link href="_content/Masa.Blazor/css/masa-blazor.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <svg class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+        <div class="loading-progress-text"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        发生错误，请重新载入页面。
+        <a href="" class="reload">重新载入</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script src="_content/BlazorComponent/js/blazor-component.js"></script>
+    <script src="_content/Project420.Client/lib/quill/quill.min.js"></script>
+    <script src="_content/Project420.Client/lib/quilljs-markdown/dist/quilljs-markdown.min.js"></script>
+    <script src="_content/Project420.Client/lib/quill-emoji/dist/quill-emoji.min.js"></script>
+</body>
+
+</html>

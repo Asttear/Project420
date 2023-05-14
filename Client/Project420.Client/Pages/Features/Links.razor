@@ -1,0 +1,56 @@
+﻿@page "/Features/Links"
+@inject IApiService ApiService
+
+@if (_links is null)
+{
+    <CenterProgressCircular />
+}
+else
+{
+    <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
+        <MContainer Fluid="true" Style="max-width:1000px">
+            <MRow>
+                @foreach (var link in _links)
+                {
+                    <MCol Cols="12" Sm="6" Md="4">
+                        <MCard Class="mx-auto" MaxWidth="344" Outlined="true">
+                            <MListItem ThreeLine="true">
+                                <MListItemContent>
+                                    <div class="text-overline mb-4">
+                                        友情链接
+                                    </div>
+                                    <MListItemTitle Class="text-h5 mb-1">
+                                        @link.Title
+                                    </MListItemTitle>
+                                    <MListItemSubtitle>
+                                        @link.Subtitle
+                                    </MListItemSubtitle>
+                                </MListItemContent>
+                                <MListItemAvatar Tile="true" Size=80>
+                                    <MImage Src="@link.IconUrl"></MImage>
+                                </MListItemAvatar>
+                            </MListItem>
+                            <MCardActions>
+                                <MButton Outlined="true" Rounded="true" Text="true" Href="@link.Url">前往</MButton>
+                            </MCardActions>
+                        </MCard>
+                    </MCol>
+                }
+            </MRow>
+        </MContainer>
+    </MRow>
+}
+
+@code {
+    IList<LinkModel>? _links;
+
+    [CascadingParameter]
+    MainLayout Layout { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.Config = new("友情链接", true, true);
+        await base.OnInitializedAsync();
+        _links = await ApiService.GetLinksAsync();
+    }
+}

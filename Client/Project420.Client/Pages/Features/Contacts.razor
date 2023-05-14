@@ -1,0 +1,45 @@
+﻿@page "/Features/Contacts"
+@inject IApiService ApiService
+
+@if (_page is null)
+{
+    <CenterProgressCircular />
+}
+else
+{
+    <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
+        <div class="d-flex flex-column pa-4" style="width:800px; max-width:100%">
+            <MCard Class="pa-4">
+                <article>
+                    <header>
+                        <MCardTitle>
+                            <h1 class="text-h4">@_page?.Title</h1>
+                        </MCardTitle>
+                    </header>
+                    <MCardText Class="text-body-1">
+                        @((MarkupString)(_page.HtmlContent ?? ""))
+                    </MCardText>
+                </article>
+            </MCard>
+        </div>
+    </MRow>
+}
+
+@code {
+    [CascadingParameter]
+    MainLayout Layout { get; set; } = null!;
+
+    ArticleModel? _page = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.Config = new("加载中", true, true);
+        _page = await ApiService.GetArticleAsync("40qn2xg7k92dzyh7s81r3xd55x");
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (_page is not null)
+            Layout.Config = Layout.Config with { PageTitle = _page.Title ?? "文章" };
+    }
+}

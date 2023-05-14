@@ -1,0 +1,24 @@
+﻿<nav>
+    <MBottomNavigation App Routable Grow Color="primary" @bind-Value="value">
+        <MButton Href="Articles">
+            <span>医疗资讯</span>
+            <MIcon>mdi-post</MIcon>
+        </MButton>
+        <MButton Href="Cases">
+            <span>诊治案例</span>
+            <MIcon>mdi-newspaper</MIcon>
+        </MButton>
+        <MButton Href="Discussions">
+            <span>疾病问答</span>
+            <MIcon>mdi-chat-question</MIcon>
+        </MButton>
+        <MButton Href="Features">
+            <span>功能入口</span>
+            <MIcon>mdi-account</MIcon>
+        </MButton>
+    </MBottomNavigation>
+</nav>
+
+@code {
+    StringNumber value = 0;
+}

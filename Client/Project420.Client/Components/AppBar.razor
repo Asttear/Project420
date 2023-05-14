@@ -1,0 +1,46 @@
+﻿@inject IJSRuntime JS
+@inject MasaBlazor Masa
+@implements IDisposable
+
+<MAppBar App ClippedLeft Flat Style="background-color:white; border-bottom: 1px solid #E0E0E0">
+    @if (ShowBackButton)
+    {
+        <MButton Icon="true" Absolute="Masa.Breakpoint.MdAndUp" Class="ml-n3" OnClick="GoBack">
+            <MIcon>mdi-arrow-left</MIcon>
+        </MButton>
+    }
+    else
+    {
+        <a class="d-none d-md-block text-caption text-decoration-none" style="position: absolute" href="/">
+            <MChip>
+                <h3>病去如风</h3>
+            </MChip>
+        </a>
+    }
+    <MAppBarTitle class="text-md-center pl-0" style="flex:1">@PageTitle</MAppBarTitle>
+</MAppBar>
+
+@code {
+    [Parameter]
+    public bool ShowBackButton { get; set; }
+
+    [Parameter]
+    public string PageTitle { get; set; } = "";
+
+    public void Dispose()
+    {
+        Masa.Breakpoint.OnUpdate -= OnBreakpointChanged;
+    }
+
+    protected override void OnInitialized()
+    {
+        Masa.Breakpoint.OnUpdate += OnBreakpointChanged;
+    }
+
+    private async Task OnBreakpointChanged() => await InvokeAsync(StateHasChanged);
+
+    private async Task GoBack()
+    {
+        await JS.InvokeVoidAsync("history.back");
+    }
+}

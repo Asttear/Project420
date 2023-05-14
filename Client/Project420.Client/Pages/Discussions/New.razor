@@ -1,0 +1,185 @@
+@page "/Discussions/New"
+
+@using System.ComponentModel.DataAnnotations
+@inject IApiService ApiService
+@inject NavigationManager Navigation
+
+<MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
+    <div class="d-flex flex-column pa-4" style="max-width:100%">
+        <AuthorizeView Context="authState">
+            <Authorized>
+                <MCard Disabled="_editDisabled"
+                       Width="1200"
+                       MaxWidth="@("100%")"
+                       Class="pa-4">
+                    <MCardTitle>
+                        <h1 class="text-h4">编辑内容</h1>
+                    </MCardTitle>
+                    <MCardSubtitle>
+                        @if (_profile is not null)
+                        {
+                            <MChip>
+                                <MIcon Left="true">mdi-account</MIcon>
+                                @_profile.Nickname
+                            </MChip>
+                            <MChip>
+                                <MIcon Left="true">mdi-gender-male-female</MIcon>
+                                @(_profile.Gender switch
+                                {
+                                    Gender.Male => "男",
+                                    Gender.Female => "女",
+                                    _ => "保密"
+                                })
+                            </MChip>
+                            <MChip>
+                                <MIcon Left="true">mdi-cake</MIcon>
+                                @if (_profile.Birthday.HasValue)
+                                {
+                                    int age = DateTimeOffset.Now.Year - _profile.Birthday.Value.Year;
+                                    <text>@age 岁</text>
+                                }
+                                else
+                                {
+                                    <text>保密</text>
+                                }
+                            </MChip>
+                        }
+                        else
+                        {
+                            <MProgressCircular Size="24" Width="3" Indeterminate="true" />
+                        }
+                        <br />
+                        您可以在 <a href="/Features/Profile">个人资料</a> 页面修改您的信息。
+                    </MCardSubtitle>
+                    <MCardText Class="text-body-1" Style="color:initial">
+                        <MForm @ref="_form" Model="_model" EnableValidation="true">
+                            <MTextField @bind-Value="_model.Title"
+                                        Label="讨论标题"
+                                        Counter="25"
+                                        Outlined="true">
+                            </MTextField>
+                            <div class="d-flex flex-column flex-grow-1">
+                                <MEditor @bind-Value="_model.HtmlContent"
+                                         Class="mb-2"
+                                         ContentStyle="height:300px"
+                                         Placeholder="请输入讨论内容……">
+                                    <ToolbarContent>
+                                        <select class="ql-header">
+                                            <option selected=""></option>
+                                            <option value="1"></option>
+                                            <option value="2"></option>
+                                            <option value="3"></option>
+                                            <option value="4"></option>
+                                            <option value="5"></option>
+                                        </select>
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <select class="ql-color"></select>
+                                            <select class="ql-background"></select>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered"></button>
+                                            <button class="ql-list" value="bullet"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-link"></button>
+                                        </span>
+                                    </ToolbarContent>
+                                </MEditor>
+                                <div class="mb-2 px-3">
+                                    <div class="m-messages theme--light error--text">
+                                        <div class="m-messages__wrapper">
+                                            @foreach (var message in context.EditContext.GetValidationMessages(new FieldIdentifier(_model, nameof(Model.HtmlContent))))
+                                            {
+                                                <div class="m-messages__message">@message</div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </MForm>
+                    </MCardText>
+                    <MCardActions Class="justify-end">
+                        <MButton OnClick="PublishAsync" Loading="_editDisabled" Color="primary">
+                            立即发布
+                        </MButton>
+                    </MCardActions>
+                </MCard>
+            </Authorized>
+            <NotAuthorized>
+                <MAlert Width="800"
+                        MaxWidth="@("100%")"
+                        Border="Borders.Top"
+                        ColoredBorder="true"
+                        Type="AlertTypes.Warning"
+                        Elevation="2">
+                    您必须登录才能发表评论！<br />
+                    即将跳转……
+                </MAlert>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</MRow>
+<MSnackbar @bind-Value="_published" Timeout="2000" Absolute="true" Bottom="true">
+    讨论已发表！
+</MSnackbar>
+
+@code {
+    [CascadingParameter]
+    MainLayout Layout { get; set; } = null!;
+
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+
+    MForm? _form;
+    Model _model = new();
+    bool _published = false;
+    bool _editDisabled = false;
+
+    ProfileModel? _profile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Layout.Config = new("发表讨论", true, true);
+
+        var user = (await AuthenticationState).User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            _profile = await ApiService.GetProfileAsync();
+        }
+        else
+        {
+            await Task.Delay(2000);
+            Navigation.NavigateTo("Features");
+        }
+    }
+
+    async void PublishAsync()
+    {
+        if (_form?.Validate() == true)
+        {
+            _editDisabled = true;
+            await ApiService.AddDiscussionAsync(_model.Title, _model.HtmlContent);
+            _published = true;
+            StateHasChanged();
+            await Task.Delay(2000);
+            Navigation.NavigateTo("Discussions");
+        }
+    }
+
+    class Model
+    {
+        [Required(ErrorMessage = "标题是必需的。")]
+        [MaxLength(25, ErrorMessage = "标题不能超过 25 个字符。")]
+        public string Title { get; set; } = "";
+
+        [Required(ErrorMessage = "内容是必需的。")]
+        [MinLength(15, ErrorMessage = "内容过短，请输入有价值内容。")]
+        public string HtmlContent { get; set; } = "";
+    }
+}
