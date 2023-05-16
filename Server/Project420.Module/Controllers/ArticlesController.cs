@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Records;
 using OrchardCore.Contents;
+using OrchardCore.Shortcodes.Services;
 using Project420.Shared.Models;
 using YesSql;
 
@@ -16,16 +17,19 @@ public class ArticlesController : ControllerBase
     private readonly IAuthorizationService _authorizationService;
     private readonly IContentManager _contentManager;
     private readonly ISession _session;
+    private readonly IShortcodeService _shortcode;
 
     private const string ArticleItem = "Article";
 
     public ArticlesController(IAuthorizationService authorizationService,
                                      IContentManager contentManager,
-                                     ISession session)
+                                     ISession session,
+                                     IShortcodeService shortcode)
     {
         _authorizationService = authorizationService;
         _contentManager = contentManager;
         _session = session;
+        _shortcode = shortcode;
     }
 
     [HttpGet]
@@ -76,7 +80,7 @@ public class ArticlesController : ControllerBase
         {
             Title = article.Content.TitlePart.Title,
             Source = article.Content.Article.Source.Text,
-            HtmlContent = article.Content.Article.Content.Html,
+            HtmlContent = await _shortcode.ProcessAsync((string)article.Content.Article.Content.Html),
             CreatedTime = article.CreatedUtc.HasValue ? DateTime.SpecifyKind(article.CreatedUtc.Value, DateTimeKind.Utc) : null
         };
         return Ok(result);
