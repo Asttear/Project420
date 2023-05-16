@@ -17,14 +17,28 @@
                         </MListItemAvatar>
                         <MListItemContent>
                             <div class="text-overline">
-                                @caseItem.Author
+                                @caseItem.Author 医生
                             </div>
                             <MListItemTitle Class="text-h5 mb-4">
-                                @caseItem.Date?.ToString("D")
+                                案例：@caseItem.Date?.ToString("D")
                             </MListItemTitle>
-                            @*
-                            <MListItemSubtitle>@discussion.CreatedTime?.LocalDateTime</MListItemSubtitle>
-                            *@
+                            <MListItemSubtitle>
+                                <MChipGroup>
+                                    <MChip>
+                                        <MIcon Left="true">mdi-gender-male-female</MIcon>
+                                        @(caseItem.Gender switch
+                                        {
+                                            Gender.Male => "男性",
+                                            Gender.Female => "女性",
+                                            _ => "保密"
+                                        })
+                                    </MChip>
+                                    <MChip>
+                                        <MIcon Left="true">mdi-cake</MIcon>
+                                        @(caseItem.Age)岁
+                                    </MChip>
+                                </MChipGroup>
+                            </MListItemSubtitle>
                         </MListItemContent>
                     </MListItem>
                 </MCard>

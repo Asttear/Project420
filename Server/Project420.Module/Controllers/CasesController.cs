@@ -53,8 +53,10 @@ public class CasesController : ControllerBase
             {
                 Id = c.ContentItemId,
                 Author = (await _userService.GetUserProfileAsync(c.Author)).Nickname ?? c.Author,
-                CreatedTime = caseItem.CreatedUtc.HasValue ? DateTime.SpecifyKind(caseItem.CreatedUtc.Value, DateTimeKind.Utc) : null,
-                Date = DateTimeOffset.Parse((string)c.Content.Case.Date.Value)
+                CreatedTime = c.CreatedUtc.HasValue ? DateTime.SpecifyKind(c.CreatedUtc.Value, DateTimeKind.Utc) : null,
+                Date = DateTimeOffset.Parse((string)c.Content.Case.Date.Value),
+                Gender = Enum.Parse<Gender>((string)c.Content.Case.Gender.Text),
+                Age = c.Content.Case.Age.Value
             });
         return Ok(await Task.WhenAll(resultTasks));
     }
