@@ -12,14 +12,14 @@
                    Href="@($"/Cases/{caseItem.Id}")"
                    Elevation="@(context.Hover ? 10 : 2)">
                     <MListItem ThreeLine="true">
-                        <MListItemAvatar Size="64" Class="align-self-center">
-                            <MIcon Size="64">mdi-account-circle</MIcon>
+                        <MListItemAvatar Size="96" Class="align-self-center">
+                            <MIcon Size="96">mdi-doctor</MIcon>
                         </MListItemAvatar>
                         <MListItemContent>
                             <div class="text-overline">
                                 @caseItem.Author 医生
                             </div>
-                            <MListItemTitle Class="text-h5 mb-4">
+                            <MListItemTitle Class="text-h5 mb-2">
                                 案例：@caseItem.Date?.ToString("D")
                             </MListItemTitle>
                             <MListItemSubtitle>
