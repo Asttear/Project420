@@ -33,6 +33,8 @@
                 "OrchardCore.OpenId.Server",
                 "OrchardCore.OpenId.Validation",
 
+                "Project420.Module",
+
                 "TheAdmin"
             ]
         },

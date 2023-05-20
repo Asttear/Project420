@@ -24,6 +24,8 @@ public class UsersController : ControllerBase
     private readonly IUserService _userService;
     private readonly ISession _session;
 
+    private const string ProfileItem = "UserProfile";
+
     public UsersController(IAuthorizationService authorizationService,
                                  IContentManager contentManager,
                                  UserManager<IUser> userManager,
@@ -69,22 +71,20 @@ public class UsersController : ControllerBase
         return Ok(await _userService.GetUserProfileAsync(User));
     }
 
-    private async Task ModifyUserProfileAsync(OrchardUser user, ProfileModel profile)
+    private async Task ModifyUserProfileAsync(OrchardUser user, ProfileModel newProfile)
     {
-        if (user.Properties["UserProfile"] is not JToken jToken
-            || jToken.ToObject<ContentItem>() is not ContentItem profileItem)
-        {
-            throw new ArgumentException("User is invalid.");
-        }
+        ContentItem profileItem = user.Properties[ProfileItem] is not JToken jToken
+            ? await _contentManager.NewAsync(ProfileItem)
+            : jToken.ToObject<ContentItem>() ?? throw new ArgumentException("User is invalid.");
 
-        profileItem.Alter<ContentPart>("UserProfile", part =>
+        profileItem.Alter<ContentPart>(ProfileItem, part =>
         {
-            part.Content.Nickname.Text = profile.Nickname ?? "";
-            part.Content.Gender.Text = profile.Gender?.ToString();
-            part.Content.Birthday.Value = profile.Birthday?.ToString();
+            part.Content.Nickname.Text = newProfile.Nickname ?? "";
+            part.Content.Gender.Text = newProfile.Gender?.ToString();
+            part.Content.Birthday.Value = newProfile.Birthday?.ToString();
         });
 
-        user.Properties["UserProfile"] = JObject.FromObject(profileItem);
+        user.Properties[ProfileItem] = JObject.FromObject(profileItem);
         await _userManager.UpdateAsync(user);
     }
 }

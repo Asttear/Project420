@@ -9,6 +9,9 @@ namespace Project420.Module.Extensions;
 
 internal static class UserServiceExtensions
 {
+    private const string ProfileItem = "UserProfile";
+
+
     public static async Task<ProfileModel> GetUserProfileAsync(this IUserService userService, string userName)
     {
         if (await userService.GetUserAsync(userName) is not OrchardUser user)
@@ -29,8 +32,11 @@ internal static class UserServiceExtensions
 
     private static ProfileModel GetUserProfile(OrchardUser user)
     {
-        if (user.Properties["UserProfile"] is not JToken jToken
-            || jToken.ToObject<ContentItem>() is not ContentItem profileItem)
+        if (user.Properties[ProfileItem] is not JToken jToken)
+        {
+            return new ProfileModel();
+        }
+        if (jToken.ToObject<ContentItem>() is not ContentItem profileItem)
         {
             throw new ArgumentException("User is invalid.");
         }
