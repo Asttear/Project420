@@ -95,7 +95,7 @@
                                 <div class="mb-2 px-3">
                                     <div class="m-messages theme--light error--text">
                                         <div class="m-messages__wrapper">
-                                            @foreach (var message in context.EditContext.GetValidationMessages(new FieldIdentifier(_model, nameof(Model.HtmlContent))))
+                                            @foreach (var message in context.EditContext.GetValidationMessages(new FieldIdentifier(_model, nameof(FormModel.HtmlContent))))
                                             {
                                                 <div class="m-messages__message">@message</div>
                                             }
@@ -138,7 +138,7 @@
     Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
     MForm? _form;
-    Model _model = new();
+    FormModel _model = new();
     bool _published = false;
     bool _editDisabled = false;
 
@@ -173,7 +173,7 @@
         }
     }
 
-    class Model
+    class FormModel
     {
         [Required(ErrorMessage = "标题是必需的。")]
         [MaxLength(25, ErrorMessage = "标题不能超过 25 个字符。")]

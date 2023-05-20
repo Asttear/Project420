@@ -1,4 +1,5 @@
 ﻿@page "/Discussions/{Id}"
+@using System.ComponentModel.DataAnnotations;
 @inherits InfinitePage
 @inject IApiService ApiService
 
@@ -55,12 +56,14 @@ else
                     畅所欲言！
                 </MCardSubtitle>
                 <MCardText Class="text-body-1">
-                    <AuthorizeView>
+                    <AuthorizeView Context="authState">
                         <Authorized>
-                            <div class="d-flex flex-column">
-                                <MTextarea Disabled="@_editDisabled" Class="mx-2" AutoGrow="true" Label="评论内容" @bind-Value="_commentField"></MTextarea>
-                                <MButton Class="align-self-end" Disabled="@_editDisabled" Color="primary" OnClick="PublishComment">发表评论</MButton>
-                            </div>
+                            <MForm @ref="_form" Model="_model" EnableValidation="true" OnValidSubmit="PublishComment">
+                                <MTextarea Disabled="@_editDisabled" Class="mx-2" AutoGrow="true" Label="评论内容" @bind-Value="_model.Content"></MTextarea>
+                                <div class="text-right">
+                                    <MButton Disabled="@_editDisabled" Color="primary" Type="submit">发表评论</MButton>
+                                </div>
+                            </MForm>
                         </Authorized>
                         <NotAuthorized>
                             <div class="font-weight-bold">
@@ -116,9 +119,10 @@ else
     MainLayout Layout { get; set; } = null!;
 
     MRow? _container;
+    MForm? _form;
+    FormModel _model = new();
     DiscussionModel? _discussion;
     List<CommentModel> _comments = new();
-    string _commentField = "";
 
     bool _published = false;
     bool _editDisabled = false;
@@ -149,11 +153,18 @@ else
     async void PublishComment()
     {
         _editDisabled = true;
-        await ApiService.AddCommentAsync(Id, _commentField);
-        _commentField = "";
+        await ApiService.AddCommentAsync(Id, _model.Content);
         _published = true;
+        _form?.Reset();
         _editDisabled = false;
         StateHasChanged();
         await LoadMore(_comments, LoadComments);
+    }
+
+    class FormModel
+    {
+        [Required(ErrorMessage = "内容是必需的。")]
+        [MinLength(5, ErrorMessage = "内容过短，请输入有价值内容。")]
+        public string Content { get; set; } = "";
     }
 }
