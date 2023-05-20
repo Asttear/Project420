@@ -1,6 +1,6 @@
 ﻿@page "/Discussions/{Id}"
-@using System.ComponentModel.DataAnnotations;
-@inherits InfinitePage
+@using System.ComponentModel.DataAnnotations
+@inherits InfinitePage<CommentModel>
 @inject IApiService ApiService
 
 @if (_discussion is null)
@@ -100,8 +100,7 @@ else
                 </MCardText>
             </MCard>
             <MInfiniteScroll Threshold="5"
-                         HasMore="_hasMore"
-                         OnLoadMore="async () => await LoadMore(_comments, LoadComments)"
+                         OnLoad="OnLoad"
                          Parent="_container?.Ref">
             </MInfiniteScroll>
         </div>
@@ -131,19 +130,18 @@ else
     {
         Layout.Config = new("加载中", true, true);
         _discussion = await ApiService.GetDiscussionAsync(Id);
-        StateHasChanged();
-        await LoadMore(_comments, LoadComments);
-        _nextRender = true;
     }
 
     protected override void OnParametersSet()
     {
         if (_discussion is not null)
             Layout.Config = Layout.Config with { PageTitle = _discussion.Title ?? "讨论" };
-        base.OnParametersSet();
     }
 
-    Task<IList<CommentModel>?> LoadComments() => ApiService.GetCommentsAsync(Id, _comments.Count);
+    protected override List<CommentModel> Items => _comments;
+
+    protected override Task<IList<CommentModel>> LoadDataAsync() 
+        => ApiService.GetCommentsAsync(Id, _comments.Count);
 
     async void PublishComment()
     {
@@ -152,8 +150,6 @@ else
         _published = true;
         _form?.Reset();
         _editDisabled = false;
-        StateHasChanged();
-        await LoadMore(_comments, LoadComments);
     }
 
     class FormModel

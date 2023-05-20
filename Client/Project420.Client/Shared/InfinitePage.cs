@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorComponent;
+using Microsoft.AspNetCore.Components;
 
 namespace Project420.Client.Shared;
 
-public class InfinitePage : ComponentBase
+public abstract class InfinitePage<T> : ComponentBase
 {
-    private bool _loading = false;
-    protected bool _hasMore = true;
+    private bool _hasMore = true;
     protected bool _nextRender = true;
 
     protected override bool ShouldRender()
@@ -18,28 +18,35 @@ public class InfinitePage : ComponentBase
         return false;
     }
 
-    protected async Task LoadMore<T>(List<T> list, Func<Task<IList<T>?>> load)
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine("#OnAfterRender");
+    }
+
+    protected async Task OnLoad(InfiniteScrollLoadEventArgs args)
     {
         _nextRender = false;
-        if (_loading)
+        var append = await LoadDataAsync();
+        if (append.Any())
         {
+            _hasMore = true;
+            Items.AddRange(append);
+            args.Status = InfiniteScrollLoadStatus.Ok;
             return;
         }
-        _loading = true;
-        var append = await load();
-
-        _nextRender = false;
-        if (append is not null)
+        else if (!_hasMore)
         {
-            list.AddRange(append);
-            _hasMore = true;
-            _nextRender = true;
+            _nextRender = false;
+            args.Status = InfiniteScrollLoadStatus.Empty;
         }
-        else if (_hasMore)
+        else
         {
             _hasMore = false;
-            _nextRender = true;
+            args.Status = InfiniteScrollLoadStatus.Empty;
         }
-        _loading = false;
     }
+
+    protected abstract List<T> Items { get; }
+
+    protected abstract Task<IList<T>> LoadDataAsync();
 }

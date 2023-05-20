@@ -1,6 +1,6 @@
 ﻿@page "/"
 @page "/Articles"
-@inherits InfinitePage
+@inherits InfinitePage<ArticleMetadata>
 @inject IApiService ApiService
 
 <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
@@ -9,9 +9,9 @@
         {
             <MHover>
                 <MCard @attributes="context.Attrs"
-                   Class="transition-swing"
-                   Href="@($"/Articles/{article.Id}")"
-                   Elevation="@(context.Hover ? 10 : 2)">
+                       Class="transition-swing"
+                       Href="@($"/Articles/{article.Id}")"
+                       Elevation="@(context.Hover ? 10 : 2)">
                     <MCardTitle>
                         @article.Title
                     </MCardTitle>
@@ -25,8 +25,7 @@
             </MHover>
         }
         <MInfiniteScroll Threshold="5"
-                         HasMore="_hasMore"
-                         OnLoadMore="async () => await LoadMore(_articles, LoadArticles)"
+                         OnLoad="OnLoad"
                          Parent="_container?.Ref">
         </MInfiniteScroll>
     </div>
@@ -39,11 +38,13 @@
     MRow? _container;
     List<ArticleMetadata> _articles = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         Layout.Config = new("医疗资讯");
-        await LoadMore(_articles, LoadArticles);
     }
 
-    Task<IList<ArticleMetadata>?> LoadArticles() => ApiService.ListArticlesAsync(_articles.Count);
+    protected override List<ArticleMetadata> Items => _articles;
+
+    protected override Task<IList<ArticleMetadata>> LoadDataAsync()
+        => ApiService.ListArticlesAsync(_articles.Count);
 }

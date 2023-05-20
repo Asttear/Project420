@@ -1,5 +1,5 @@
 ﻿@page "/Cases"
-@inherits InfinitePage
+@inherits InfinitePage<CaseMetadata>
 @inject IApiService ApiService
 
 <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
@@ -45,8 +45,7 @@
             </MHover>
         }
         <MInfiniteScroll Threshold="5"
-                         HasMore="_hasMore"
-                         OnLoadMore="async () => await LoadMore(_cases, LoadCases)"
+                         OnLoad="OnLoad"
                          Parent="_container?.Ref">
         </MInfiniteScroll>
     </div>
@@ -59,11 +58,13 @@
     MRow? _container;
     List<CaseMetadata> _cases = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         Layout.Config = new("诊疗案例");
-        await LoadMore(_cases, LoadCases);
     }
 
-    Task<IList<CaseMetadata>?> LoadCases() => ApiService.ListCasesAsync(_cases.Count);
+    protected override List<CaseMetadata> Items => _cases;
+
+    protected override Task<IList<CaseMetadata>> LoadDataAsync() 
+    => ApiService.ListCasesAsync(_cases.Count);
 }

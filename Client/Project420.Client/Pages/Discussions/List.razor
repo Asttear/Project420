@@ -1,5 +1,5 @@
 @page "/Discussions"
-@inherits InfinitePage
+@inherits InfinitePage<DiscussionMetadata>
 @inject IApiService ApiService
 
 <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
@@ -29,8 +29,7 @@
             </MHover>
         }
         <MInfiniteScroll Threshold="5"
-                         HasMore="_hasMore"
-                         OnLoadMore="async () => await LoadMore(_discussions, LoadDiscussions)"
+                         OnLoad="OnLoad"
                          Parent="_container?.Ref">
         </MInfiniteScroll>
     </div>
@@ -49,11 +48,13 @@
     MRow? _container;
     List<DiscussionMetadata> _discussions = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         Layout.Config = new("疾病问答");
-        await LoadMore(_discussions, LoadDiscussions);
     }
 
-    Task<IList<DiscussionMetadata>?> LoadDiscussions() => ApiService.ListDiscussionsAsync(_discussions.Count);
+    protected override List<DiscussionMetadata> Items => _discussions;
+
+    protected override Task<IList<DiscussionMetadata>> LoadDataAsync() 
+    => ApiService.ListDiscussionsAsync(_discussions.Count);
 }

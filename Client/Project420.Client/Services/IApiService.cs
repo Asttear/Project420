@@ -4,13 +4,13 @@ namespace Project420.Client.Services;
 
 public interface IApiService
 {
-    Task<IList<CommentModel>?> GetCommentsAsync(string articleId, int count);
+    Task<IList<CommentModel>> GetCommentsAsync(string articleId, int count);
     Task AddCommentAsync(string articleId, string comment);
-    Task<IList<ArticleMetadata>?> ListArticlesAsync(int count);
+    Task<IList<ArticleMetadata>> ListArticlesAsync(int count);
     Task<ArticleModel> GetArticleAsync(string id);
-    Task<IList<CaseMetadata>?> ListCasesAsync(int count);
+    Task<IList<CaseMetadata>> ListCasesAsync(int count);
     Task<CaseModel> GetCaseAsync(string id);
-    Task<IList<DiscussionMetadata>?> ListDiscussionsAsync(int count);
+    Task<IList<DiscussionMetadata>> ListDiscussionsAsync(int count);
     Task<DiscussionModel> GetDiscussionAsync(string id);
     Task AddDiscussionAsync(string title, string htmlContent);
     Task<ProfileModel> GetProfileAsync();

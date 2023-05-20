@@ -20,76 +20,59 @@ public class ApiService : IApiService
         _privateHttp = httpClientFactory.CreateClient("PrivateApi");
     }
 
-    public async Task<IList<CommentModel>?> GetCommentsAsync(string id, int count)
+    public async Task<IList<CommentModel>> GetCommentsAsync(string id, int count)
     {
         var comments = await _publicHttp.GetFromJsonAsync<IList<CommentModel>>(
             $"Api/Comments?articleId={id}&offset={count}",
             _jsonOptions
         );
-        if (comments?.Count > 0)
-        {
-            return comments;
-        }
-        return null;
+        return comments ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task AddCommentAsync(string articleId, string comment)
     {
         StringContent content = new(comment);
         var response = await _privateHttp.PostAsync($"Api/Comments?articleId={articleId}", content);
-
         if (!response.IsSuccessStatusCode)
         {
-            throw new HttpRequestException("请求失败。", null, response.StatusCode);
+            throw new Exception("Request failed.");
         }
     }
 
-    public async Task<IList<ArticleMetadata>?> ListArticlesAsync(int count)
+    public async Task<IList<ArticleMetadata>> ListArticlesAsync(int count)
     {
         var articles = await _publicHttp.GetFromJsonAsync<IList<ArticleMetadata>>($"Api/Articles?offset={count}");
-        if (articles?.Count > 0)
-        {
-            return articles;
-        }
-        return null;
+        return articles ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task<ArticleModel> GetArticleAsync(string id)
     {
         var article = await _publicHttp.GetFromJsonAsync<ArticleModel>($"Api/Articles/{id}");
-        return article ?? throw new ArgumentException("Cannot get the article matches this id.");
+        return article ?? throw new Exception("Cannot get the article matches this id.");
     }
 
-    public async Task<IList<CaseMetadata>?> ListCasesAsync(int count)
+    public async Task<IList<CaseMetadata>> ListCasesAsync(int count)
     {
         var cases = await _publicHttp.GetFromJsonAsync<IList<CaseMetadata>>($"Api/Cases?offset={count}");
-        if (cases?.Count > 0)
-        {
-            return cases;
-        }
-        return null;
+        return cases ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task<CaseModel> GetCaseAsync(string id)
     {
         var caseItem = await _publicHttp.GetFromJsonAsync<CaseModel>($"Api/Cases/{id}");
-        return caseItem ?? throw new ArgumentException("Cannot get the case matches this id.");
+        return caseItem ?? throw new Exception("Cannot get the case matches this id.");
     }
 
-    public async Task<IList<DiscussionMetadata>?> ListDiscussionsAsync(int count)
+    public async Task<IList<DiscussionMetadata>> ListDiscussionsAsync(int count)
     {
         var discussions = await _publicHttp.GetFromJsonAsync<IList<DiscussionMetadata>>($"Api/Discussions?offset={count}");
-        if (discussions?.Count > 0)
-        {
-            return discussions;
-        }
-        return null;
+        return discussions ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task<DiscussionModel> GetDiscussionAsync(string id)
     {
         var discussion = await _publicHttp.GetFromJsonAsync<DiscussionModel>($"Api/Discussions/{id}");
-        return discussion ?? throw new ArgumentException("Cannot get the discussion matches this id.");
+        return discussion ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task AddDiscussionAsync(string title, string htmlContent)
@@ -97,20 +80,20 @@ public class ApiService : IApiService
         var response = await _privateHttp.PostAsJsonAsync("Api/Discussions", new { title, htmlContent });
         if (!response.IsSuccessStatusCode)
         {
-            throw new HttpRequestException("请求失败。", null, response.StatusCode);
+            throw new Exception("Request failed.");
         }
     }
 
     public async Task<ProfileModel> GetProfileAsync()
     {
         var profile = await _privateHttp.GetFromJsonAsync<ProfileModel>("Api/Users");
-        return profile ?? throw new HttpRequestException();
+        return profile ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task<ProfileModel> GetProfileAsync(string userName)
     {
         var profile = await _publicHttp.GetFromJsonAsync<ProfileModel>($"Api/Users/{userName}");
-        return profile ?? throw new HttpRequestException();
+        return profile ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task<ProfileModel> ModifyProfileAsync(ProfileModel profile)
@@ -118,17 +101,15 @@ public class ApiService : IApiService
         var response = await _privateHttp.PutAsJsonAsync("Api/Users", profile);
         if (!response.IsSuccessStatusCode)
         {
-            throw new HttpRequestException("请求失败。", null, response.StatusCode);
+            throw new Exception("Request failed.");
         }
-        return await JsonSerializer.DeserializeAsync<ProfileModel>(response.Content.ReadAsStream()) ?? throw new Exception();
+        var result = await JsonSerializer.DeserializeAsync<ProfileModel>(response.Content.ReadAsStream());
+        return result ?? throw new Exception("Invalid data recieved from server.");
     }
 
     public async Task<IList<LinkModel>> GetLinksAsync()
     {
-        var links = await _publicHttp.GetFromJsonAsync<IList<LinkModel>>(
-            "Api/Links",
-            _jsonOptions
-        );
-        return links ?? new List<LinkModel>();
+        var links = await _publicHttp.GetFromJsonAsync<IList<LinkModel>>("Api/Links", _jsonOptions);
+        return links ?? throw new Exception("Invalid data recieved from server.");
     }
 }
