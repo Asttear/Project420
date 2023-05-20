@@ -143,11 +143,6 @@ else
         base.OnParametersSet();
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Console.WriteLine("#OnAfterRender");
-    }
-
     Task<IList<CommentModel>?> LoadComments() => ApiService.GetCommentsAsync(Id, _comments.Count);
 
     async void PublishComment()
