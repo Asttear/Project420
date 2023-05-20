@@ -18,38 +18,39 @@
                     <MCardSubtitle>
                         @if (_profile is not null)
                         {
-                            <MChip>
-                                <MIcon Left="true">mdi-account</MIcon>
-                                @_profile.Nickname
-                            </MChip>
-                            <MChip>
-                                <MIcon Left="true">mdi-gender-male-female</MIcon>
-                                @(_profile.Gender switch
-                                {
-                                    Gender.Male => "男",
-                                    Gender.Female => "女",
-                                    _ => "保密"
-                                })
-                            </MChip>
-                            <MChip>
-                                <MIcon Left="true">mdi-cake</MIcon>
-                                @if (_profile.Birthday.HasValue)
-                                {
-                                    int age = DateTimeOffset.Now.Year - _profile.Birthday.Value.Year;
-                                    <text>@age 岁</text>
-                                }
-                                else
-                                {
-                                    <text>保密</text>
-                                }
-                            </MChip>
+                            <MChipGroup>
+                                <MChip>
+                                    <MIcon Left="true">mdi-account</MIcon>
+                                    @_profile.Nickname
+                                </MChip>
+                                <MChip>
+                                    <MIcon Left="true">mdi-gender-male-female</MIcon>
+                                    @(_profile.Gender switch
+                                    {
+                                        Gender.Male => "男",
+                                        Gender.Female => "女",
+                                        _ => "保密"
+                                    })
+                                </MChip>
+                                <MChip>
+                                    <MIcon Left="true">mdi-cake</MIcon>
+                                    @if (_profile.Birthday.HasValue)
+                                    {
+                                        int age = DateTimeOffset.Now.Year - _profile.Birthday.Value.Year;
+                                        <text>@age 岁</text>
+                                    }
+                                    else
+                                    {
+                                        <text>保密</text>
+                                    }
+                                </MChip>
+                            </MChipGroup>
+                            <text>您可以在 <a href="/Features/Profile">个人资料</a> 页面修改您的信息。</text>
                         }
                         else
                         {
                             <MProgressCircular Size="24" Width="3" Indeterminate="true" />
                         }
-                        <br />
-                        您可以在 <a href="/Features/Profile">个人资料</a> 页面修改您的信息。
                     </MCardSubtitle>
                     <MCardText Class="text-body-1" Style="color:initial">
                         <MForm @ref="_form" Model="_model" EnableValidation="true">
