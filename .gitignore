@@ -348,7 +348,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/Server/Project420.Server/wwwroot/Default/is-cache/3/6/3/a/0/d/a/9/d/1/d/f
+
+/Server/Project420.Server/wwwroot/Default
 /Server/Project420.Server/wwwroot/is-cache
 /Server/Project420.Server/Localization
 /Server/Project420.Server/App_Data

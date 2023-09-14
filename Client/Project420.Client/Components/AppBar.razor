@@ -3,7 +3,7 @@
 @implements IDisposable
 
 <MAppBar App ClippedLeft Flat Style="background-color:white; border-bottom: 1px solid #E0E0E0">
-    @if (ShowBackButton)
+     @if (ShowBackButton)
     {
         <MButton Icon="true" Absolute="Masa.Breakpoint.MdAndUp" Class="ml-n3" OnClick="GoBack">
             <MIcon>mdi-arrow-left</MIcon>
@@ -29,15 +29,16 @@
 
     public void Dispose()
     {
-        Masa.Breakpoint.OnUpdate -= OnBreakpointChanged;
+        Masa.BreakpointChanged -= OnBreakpointChanged;
     }
 
     protected override void OnInitialized()
     {
-        Masa.Breakpoint.OnUpdate += OnBreakpointChanged;
+        Masa.BreakpointChanged += OnBreakpointChanged;
     }
 
-    private async Task OnBreakpointChanged() => await InvokeAsync(StateHasChanged);
+    private async void OnBreakpointChanged(object? sender, BreakpointChangedEventArgs e)
+        => await InvokeAsync(StateHasChanged);
 
     private async Task GoBack()
     {

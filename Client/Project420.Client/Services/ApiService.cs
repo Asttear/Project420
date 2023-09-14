@@ -48,7 +48,12 @@ public class ApiService : IApiService
     public async Task<ArticleModel> GetArticleAsync(string id)
     {
         var article = await _publicHttp.GetFromJsonAsync<ArticleModel>($"Api/Articles/{id}");
-        return article ?? throw new Exception("Cannot get the article matches this id.");
+        if (article is null)
+        {
+            throw new Exception("Cannot get the article matches this id.");
+        }
+        article.HtmlContent = article.HtmlContent?.Replace("/Bedrock/media/", "https://legion:7000/Bedrock/media/");
+        return article;
     }
 
     public async Task<IList<CaseMetadata>> ListCasesAsync(int count)
@@ -71,8 +76,10 @@ public class ApiService : IApiService
 
     public async Task<DiscussionModel> GetDiscussionAsync(string id)
     {
-        var discussion = await _publicHttp.GetFromJsonAsync<DiscussionModel>($"Api/Discussions/{id}");
-        return discussion ?? throw new Exception("Invalid data recieved from server.");
+        var discussion = await _publicHttp.GetFromJsonAsync<DiscussionModel>($"Api/Discussions/{id}")
+            ?? throw new Exception("Invalid data recieved from server.");
+        discussion.HtmlContent = discussion.HtmlContent?.Replace("/Bedrock/media/", "https://legion:7000/Bedrock/media/");
+        return discussion;
     }
 
     public async Task AddDiscussionAsync(string title, string htmlContent)

@@ -4,6 +4,27 @@
 @inject IApiService ApiService
 
 <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
+    <div class="pa-4" style="width:800px; max-width:100%">
+        <MResponsive AspectRatio="2/1">
+            <MCarousel Cycle="true"
+                       Height="@("auto")"
+                       HideDelimiterBackground="true"
+                       ShowArrowsOnHover="true">
+                <ChildContent>
+                    <MCarouselItem>
+                        <MResponsive AspectRatio="2/1">
+                            <MImage Src="_content/Project420.Client/image/carousel/p1.jpg"></MImage>
+                        </MResponsive>
+                    </MCarouselItem>
+                    <MCarouselItem>
+                        <MResponsive AspectRatio="2/1">
+                            <MImage Src="_content/Project420.Client/image/carousel/p2.jpg"></MImage>
+                        </MResponsive>
+                    </MCarouselItem>
+                </ChildContent>
+            </MCarousel>
+        </MResponsive>
+    </div>
     <div class="d-flex flex-column pa-4" style="width:800px; max-width:100%; row-gap:16px">
         @foreach (var article in _articles)
         {

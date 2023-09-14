@@ -150,6 +150,7 @@ else
         _published = true;
         _form?.Reset();
         _editDisabled = false;
+        await LoadDataAsync();
     }
 
     class FormModel

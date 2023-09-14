@@ -56,7 +56,7 @@
   <ItemGroup>
     <!-- App icon for Windows -->
     <MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" />
-    
+
     <!-- App icon for all other platforms -->
     <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" ForegroundScale="0.5" Color="White" />
 
@@ -82,6 +82,8 @@
   <ItemGroup>
     <PackageReference Include="Aguacongas.AspNetCore.Components.Maui.Authentication.Oidc" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+    <!-- DO NOT REMOVE. See https://github.com/dotnet/maui/issues/16244 -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" VersionOverride="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>

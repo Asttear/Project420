@@ -127,8 +127,8 @@ else
 
     protected override List<CommentModel> Items => _comments;
 
-    protected override Task<IList<CommentModel>> LoadDataAsync() 
-    => ApiService.GetCommentsAsync(Id, _comments.Count);
+    protected override Task<IList<CommentModel>> LoadDataAsync()
+        => ApiService.GetCommentsAsync(Id, _comments.Count);
 
     async void PublishComment()
     {
@@ -137,6 +137,7 @@ else
         _published = true;
         _form?.Reset();
         _editDisabled = false;
+        await LoadDataAsync();
     }
 
     class FormModel

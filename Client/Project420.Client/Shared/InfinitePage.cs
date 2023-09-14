@@ -18,11 +18,6 @@ public abstract class InfinitePage<T> : ComponentBase
         return false;
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        Console.WriteLine("#OnAfterRender");
-    }
-
     protected async Task OnLoad(InfiniteScrollLoadEventArgs args)
     {
         _nextRender = false;
