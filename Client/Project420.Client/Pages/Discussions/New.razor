@@ -53,7 +53,7 @@
                         }
                     </MCardSubtitle>
                     <MCardText Class="text-body-1" Style="color:initial">
-                        <MForm @ref="_form" Model="_model" EnableValidation="true">
+                        <MForm @ref="_form" Model="_model">
                             <MTextField @bind-Value="_model.Title"
                                         Label="ÌÖÂÛ±êÌâ"
                                         Counter="25"
@@ -95,7 +95,7 @@
                                 <div class="mb-2 px-3">
                                     <div class="m-messages theme--light error--text">
                                         <div class="m-messages__wrapper">
-                                            @foreach (var message in context.EditContext.GetValidationMessages(new FieldIdentifier(_model, nameof(FormModel.HtmlContent))))
+                                            @foreach (var message in context.EditContext?.GetValidationMessages(new FieldIdentifier(_model, nameof(FormModel.HtmlContent))) ?? [])
                                             {
                                                 <div class="m-messages__message">@message</div>
                                             }

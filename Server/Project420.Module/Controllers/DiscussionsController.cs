@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Records;
 using OrchardCore.Contents;
@@ -8,6 +7,8 @@ using OrchardCore.Users.Services;
 using Project420.Shared.Models;
 using Project420.Module.Extensions;
 using YesSql;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Project420.Module.Controllers;
 
@@ -101,7 +102,11 @@ public class DiscussionsController : ControllerBase
         }
 
         StreamReader reader = new(Request.Body);
-        var data = JsonConvert.DeserializeAnonymousType(await reader.ReadToEndAsync(), new { Title = "", HtmlContent = "" });
+        var data = JsonSerializerExtensions.DeserializeAnonymousType(
+            await reader.ReadToEndAsync(), 
+            new { Title = "", HtmlContent = "" },
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
 
         discussion.Alter<ContentPart>("Discussion", part =>
         {

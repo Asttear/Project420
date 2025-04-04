@@ -1,4 +1,4 @@
-﻿using BlazorComponent;
+﻿using Masa.Blazor;
 using Microsoft.AspNetCore.Components;
 
 namespace Project420.Client.Shared;

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Project420.Client;
 using Project420.Client.Services;
 
-const string BedrockAddress = "https://legion:7000/Bedrock/";
+const string BedrockAddress = "https://localhost:7000/Bedrock/";
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<Main>("#app");
@@ -14,7 +14,7 @@ await builder.Services.AddMasaBlazor(builder =>
 {
     builder.ConfigureTheme(theme =>
     {
-        theme.Themes.Light.Primary = "#2196F3";   // blue
+        theme.Themes.Light.Primary = "#2196F3";   // blue
         theme.Themes.Light.Accent = "#82B1FF";    // blue accent-1
         theme.Themes.Light.Error = "#B71C1C";     // red darken-4
         theme.Themes.Light.Success = "#388E3C";   // green darken-2

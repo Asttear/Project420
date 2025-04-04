@@ -9,7 +9,7 @@
 }
 else
 {
-    <MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
+    <MRow Id="container" Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
         <div class="d-flex flex-column pa-4" style="width:1200px; max-width:100%; row-gap:16px">
             <MCard Class="pa-4">
                 <article>
@@ -45,7 +45,7 @@ else
                 <MCardText Class="text-body-1">
                     <AuthorizeView Context="authState">
                         <Authorized>
-                            <MForm @ref="_form" Model="_model" EnableValidation="true" OnValidSubmit="PublishComment">
+                            <MForm @ref="_form" Model="_model" OnValidSubmit="PublishComment">
                                 <MTextarea Disabled="@_editDisabled" Class="mx-2" AutoGrow="true" Label="评论内容" @bind-Value="_model.Content"></MTextarea>
                                 <div class="text-right">
                                     <MButton Disabled="@_editDisabled" Color="primary" Type="submit">发表评论</MButton>
@@ -88,7 +88,7 @@ else
             </MCard>
             <MInfiniteScroll Threshold="5"
                              OnLoad="OnLoad"
-                             Parent="_container?.Ref">
+                             Parent="#container">
             </MInfiniteScroll>
         </div>
         <MSnackbar @bind-Value="_published" Timeout="2000" Absolute="true" Bottom="true">
@@ -104,7 +104,6 @@ else
     [CascadingParameter]
     MainLayout Layout { get; set; } = null!;
 
-    MRow? _container;
     MForm? _form;
     FormModel _model = new();
     ArticleModel? _article;

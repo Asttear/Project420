@@ -52,7 +52,7 @@ public class ApiService : IApiService
         {
             throw new Exception("Cannot get the article matches this id.");
         }
-        article.HtmlContent = article.HtmlContent?.Replace("/Bedrock/media/", "https://legion:7000/Bedrock/media/");
+        article.HtmlContent = article.HtmlContent?.Replace("/Bedrock/media/", "https://localhost:7000/Bedrock/media/");
         return article;
     }
 
@@ -78,7 +78,7 @@ public class ApiService : IApiService
     {
         var discussion = await _publicHttp.GetFromJsonAsync<DiscussionModel>($"Api/Discussions/{id}")
             ?? throw new Exception("Invalid data recieved from server.");
-        discussion.HtmlContent = discussion.HtmlContent?.Replace("/Bedrock/media/", "https://legion:7000/Bedrock/media/");
+        discussion.HtmlContent = discussion.HtmlContent?.Replace("/Bedrock/media/", "https://localhost:7000/Bedrock/media/");
         return discussion;
     }
 

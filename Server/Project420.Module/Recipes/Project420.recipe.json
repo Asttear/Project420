@@ -109,7 +109,7 @@
                         {
                             "$type": "OrchardCore.AdminMenu.AdminNodes.LinkAdminNode, OrchardCore.AdminMenu",
                             "LinkText": "案例",
-                            "LinkUrl": "https://legion:7000/Bedrock/Admin/Contents/ContentItems/Case?q=status:Owner",
+                            "LinkUrl": "https://localhost:7000/Bedrock/Admin/Contents/ContentItems/Case?q=status:Owner",
                             "IconClass": "fas fa-folder-plus"
                         }
                     ]

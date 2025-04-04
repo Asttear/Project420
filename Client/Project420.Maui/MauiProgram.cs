@@ -7,7 +7,8 @@ namespace Project420.Maui;
 
 public static class MauiProgram
 {
-    const string BedrockAddress = "https://legion:7000/Bedrock/";
+    const string BedrockAddress = "https://localhost:7000/Bedrock/";
+
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -47,26 +48,21 @@ public static class MauiProgram
             providerOptions.PostLogoutRedirectUri = "project420://Features/Authentication/Logout-Callback";
             providerOptions.ResponseType = "code";
             providerOptions.AdditionalProviderParameters["UsePkce"] = "true";
-        }, ConfigureHttpMessageBuilder);
+        }, builder => builder.PrimaryHandler = GetPlatformMessageHandler());
 
-        builder.Services.AddScoped(typeof(IApiService), typeof(ApiService));
+        builder.Services.AddScoped<IApiService, ApiService>();
         builder.Services.AddHttpClient("PublicApi", client => client.BaseAddress = new(BedrockAddress))
-            .ConfigureHttpMessageHandlerBuilder(ConfigureHttpMessageBuilder);
+            .ConfigurePrimaryHttpMessageHandler(GetPlatformMessageHandler);
         builder.Services.AddHttpClient("PrivateApi", client => client.BaseAddress = new(BedrockAddress))
-            .ConfigureHttpMessageHandlerBuilder(ConfigureHttpMessageBuilder)
+            .ConfigurePrimaryHttpMessageHandler(GetPlatformMessageHandler)
             .AddHttpMessageHandler(sp =>
             {
                 var handler = sp.GetRequiredService<AuthorizationMessageHandler>()
-                    .ConfigureHandler(authorizedUrls: new[] { BedrockAddress });
+                    .ConfigureHandler(authorizedUrls: [BedrockAddress]);
                 return handler;
             });
 
         return builder.Build();
-    }
-
-    public static void ConfigureHttpMessageBuilder(HttpMessageHandlerBuilder builder)
-    {
-        builder.PrimaryHandler = GetPlatformMessageHandler();
     }
 
     public static HttpMessageHandler GetPlatformMessageHandler()

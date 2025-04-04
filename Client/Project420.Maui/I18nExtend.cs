@@ -1,11 +1,11 @@
-﻿using BlazorComponent.I18n;
-using System.Text.Json;
+﻿using System.Text.Json;
+using Masa.Blazor.Core.I18n;
 
 namespace Project420.Maui;
 
 static class I18nExtend
 {
-    public static IBlazorComponentBuilder AddI18nForMauiBlazor(this IBlazorComponentBuilder builder, string localesDirectory)
+    public static IMasaBlazorBuilder AddI18nForMauiBlazor(this IMasaBlazorBuilder builder, string localesDirectory)
     {
         string supportedCulturesPath = localesDirectory + "/supportedCultures.json";
         bool existsCultures = FileSystem.AppPackageFileExistsAsync(supportedCulturesPath).Result;

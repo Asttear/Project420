@@ -3,7 +3,7 @@
 @inherits InfinitePage<ArticleMetadata>
 @inject IApiService ApiService
 
-<MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
+<MRow Id="container" Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
     <div class="pa-4" style="width:800px; max-width:100%">
         <MResponsive AspectRatio="2/1">
             <MCarousel Cycle="true"
@@ -47,7 +47,7 @@
         }
         <MInfiniteScroll Threshold="5"
                          OnLoad="OnLoad"
-                         Parent="_container?.Ref">
+                         Parent="#container">
         </MInfiniteScroll>
     </div>
 </MRow>
@@ -56,7 +56,6 @@
     [CascadingParameter]
     MainLayout Layout { get; set; } = null!;
 
-    MRow? _container;
     List<ArticleMetadata> _articles = new();
 
     protected override void OnInitialized()

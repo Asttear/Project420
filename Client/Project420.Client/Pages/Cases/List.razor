@@ -2,7 +2,7 @@
 @inherits InfinitePage<CaseMetadata>
 @inject IApiService ApiService
 
-<MRow Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center" @ref="_container">
+<MRow Id="container" Class="overflow-y-auto" Style="height:calc(100vh - 120px)" Justify="JustifyTypes.Center">
     <div class="d-flex flex-column pa-4" style="width:800px; max-width:100%; row-gap:16px">
         @foreach (var caseItem in _cases)
         {
@@ -46,7 +46,7 @@
         }
         <MInfiniteScroll Threshold="5"
                          OnLoad="OnLoad"
-                         Parent="_container?.Ref">
+                         Parent="#container">
         </MInfiniteScroll>
     </div>
 </MRow>
@@ -55,7 +55,6 @@
     [CascadingParameter]
     MainLayout Layout { get; set; } = null!;
 
-    MRow? _container;
     List<CaseMetadata> _cases = new();
 
     protected override void OnInitialized()

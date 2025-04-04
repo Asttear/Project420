@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-using OrchardCore.ContentManagement;
+﻿using OrchardCore.ContentManagement;
 using OrchardCore.Users.Services;
 using Project420.Shared.Models;
 using System.Security.Claims;
+using System.Text.Json.Nodes;
 using OrchardUser = OrchardCore.Users.Models.User;
 
 namespace Project420.Module.Extensions;
@@ -32,11 +32,11 @@ internal static class UserServiceExtensions
 
     private static ProfileModel GetUserProfile(OrchardUser user)
     {
-        if (user.Properties[ProfileItem] is not JToken jToken)
+        if (user.Properties[ProfileItem] is not JsonNode node)
         {
             return new ProfileModel();
         }
-        if (jToken.ToObject<ContentItem>() is not ContentItem profileItem)
+        if (node.ToObject<ContentItem>() is not ContentItem profileItem)
         {
             throw new ArgumentException("User is invalid.");
         }

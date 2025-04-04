@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using OrchardCore.ContentManagement;
 using OrchardCore.Users;
 using OrchardCore.Users.Services;
@@ -73,9 +73,9 @@ public class UsersController : ControllerBase
 
     private async Task ModifyUserProfileAsync(OrchardUser user, ProfileModel newProfile)
     {
-        ContentItem profileItem = user.Properties[ProfileItem] is not JToken jToken
+        ContentItem profileItem = user.Properties[ProfileItem] is not JsonNode node
             ? await _contentManager.NewAsync(ProfileItem)
-            : jToken.ToObject<ContentItem>() ?? throw new ArgumentException("User is invalid.");
+            : node.ToObject<ContentItem>() ?? throw new ArgumentException("User is invalid.");
 
         profileItem.Alter<ContentPart>(ProfileItem, part =>
         {

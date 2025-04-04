@@ -6,6 +6,8 @@ using OrchardCore.Contents;
 using OrchardCore.Users.Services;
 using Project420.Module.Extensions;
 using Project420.Shared.Models;
+using System.Text.Json.Dynamic;
+using System.Text.Json.Nodes;
 using YesSql;
 
 namespace Project420.Module.Controllers;
@@ -41,7 +43,6 @@ public class CasesController : ControllerBase
         {
             return Unauthorized(new { result = "权限不足。" });
         }
-
         IEnumerable<ContentItem> cases = await _session
             .Query<ContentItem, ContentItemIndex>(index => index.ContentType == CaseTypeName && index.Published)
             .ListAsync();
@@ -56,7 +57,7 @@ public class CasesController : ControllerBase
                 CreatedTime = c.CreatedUtc.HasValue ? DateTime.SpecifyKind(c.CreatedUtc.Value, DateTimeKind.Utc) : null,
                 Date = DateTimeOffset.Parse((string)c.Content.Case.Date.Value),
                 Gender = Enum.Parse<Gender>((string)c.Content.Case.Gender.Text),
-                Age = c.Content.Case.Age.Value
+                Age = (int?)(double?)c.Content.Case.Age.Value
             });
         return Ok(await Task.WhenAll(resultTasks));
     }
@@ -85,7 +86,7 @@ public class CasesController : ControllerBase
             CreatedTime = caseItem.CreatedUtc.HasValue ? DateTime.SpecifyKind(caseItem.CreatedUtc.Value, DateTimeKind.Utc) : null,
             Date = DateTimeOffset.Parse((string)caseItem.Content.Case.Date.Value),
             Gender = Enum.Parse<Gender>((string)caseItem.Content.Case.Gender.Text),
-            Age = caseItem.Content.Case.Age.Value,
+            Age = (int?)(double?)caseItem.Content.Case.Age.Value,
             Symptoms = caseItem.Content.Case.Symptoms.Text,
             Treatment = caseItem.Content.Case.Treatment.Text,
         };
